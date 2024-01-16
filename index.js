@@ -30,14 +30,15 @@ const client = new Client({
 
 const app = express();
 
-
+// Setup a basic HTTP server
 const server = http.createServer(app);
 
+// Add a route for the root URL
 app.get('/', (req, res) => {
     res.send('Bot is running!');
 });
 
-
+// Listen on the specified port
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
@@ -47,10 +48,10 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
-
+    // Check if the author is the owner of the guild or the allowed user
     if (message.content.toLowerCase() === '!setuprr' &&
         (message.author.id === message.guild.ownerId || message.author.id === ALLOWED_USER_ID)) {
-     
+        // Creating an embed with reaction roles
         const embed = {
             author: {
                 name: 'Regiments/Ping Reaction Role Picker!',
@@ -77,7 +78,7 @@ client.on('messageCreate', async (message) => {
 
         const sentMessage = await message.channel.send({ embeds: [embed] });
 
-   
+        // Add reactions to the message using custom emoji IDs
         const reactions = [
             '1193228529022808094',
             '1193228497531969586',
@@ -97,9 +98,9 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (user.bot) return; 
+    if (user.bot) return; // Ignore reactions from bots
 
-
+    // Define role mappings with custom emoji IDs
     const roleMappings = {
         '1193228529022808094': '1193181980733472850',
         '1193228497531969586': '1193181977428369408',
@@ -112,13 +113,13 @@ client.on('messageReactionAdd', async (reaction, user) => {
         '1196680865510604810': '1196680148565631076',
         '1193537861820100668': '1193221224642379938',
 
-
+        // Add more mappings as needed
     };
 
     const guild = reaction.message.guild;
     const member = guild.members.cache.get(user.id);
 
-
+    // Check if the reaction corresponds to a role
     const roleId = roleMappings[reaction.emoji.id];
     if (roleId) {
         const role = guild.roles.cache.get(roleId);
@@ -130,8 +131,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
-    if (user.bot) return; 
+    if (user.bot) return; // Ignore reactions from bots
 
+    // Define role mappings with custom emoji IDs
     const roleMappings = {
         '1193228529022808094': '1193181980733472850',
         '1193228497531969586': '1193181977428369408',
@@ -144,12 +146,13 @@ client.on('messageReactionRemove', async (reaction, user) => {
         '1196680865510604810': '1196680148565631076',
         '1193537861820100668': '1193221224642379938',
 
+        // Add more mappings as needed
     };
 
     const guild = reaction.message.guild;
     const member = guild.members.cache.get(user.id);
 
-
+    // Check if the reaction corresponds to a role
     const roleId = roleMappings[reaction.emoji.id];
     if (roleId) {
         const role = guild.roles.cache.get(roleId);
